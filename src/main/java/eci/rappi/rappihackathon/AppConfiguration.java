@@ -10,8 +10,12 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
+import java.sql.*;
+
 @Configuration
 public class AppConfiguration {
+
+    private static Statement conection;
 
     @Bean
     public MongoDbFactory mongoDbFactory() throws Exception {
@@ -34,6 +38,38 @@ public class AppConfiguration {
 
         return mongoTemplate;
 
+    }
+
+    public static void CreateConection(){
+        String dataBase="storekeepersdb";
+        String user="hackathonpostgres";
+        String pass="hackathon2018rappipsql";
+        String host="postgres-hackathon.eastus2.cloudapp.azure.com";
+        int port=5432;
+        try{
+            Class.forName("org.postgresql.Driver");
+            Connection con= DriverManager.getConnection("jdbc:postgressql://"+host+":"+port+"/"+dataBase+"?user="+user+"&password="+pass);
+            conection = con.createStatement();
+        }catch(Exception e){
+            System.out.println("No se conecto! "+e);
+        }
+    }
+
+    public static ResultSet makeQuery(String columns, String table, String condition) throws SQLException {
+        CreateConection();
+        ResultSet res = conection.executeQuery("select "+columns+" from "+table+" where "+condition);
+        return res;
+    }
+
+    public static ResultSet makeQuery(String columns, String table) throws SQLException {
+        CreateConection();
+        ResultSet res = conection.executeQuery("select "+columns+" from "+table);
+        return res;
+    }
+
+    public static void update(String table, String set,String where) throws SQLException {
+        CreateConection();
+        conection.executeQuery("Update "+table+" set "+set+" where "+where);
     }
 
 }
