@@ -29,6 +29,19 @@ public class Toolkit {
 
     }
 
+    public Toolkit(Double delivery_kit, Double kit_size, Double terminal, Double know_how, Boolean trusted, Double order_level, Double storekeeper_level, Double vehicle, Boolean cashless, Boolean exclusive) {
+        this.delivery_kit = delivery_kit;
+        this.kit_size = kit_size;
+        this.terminal = terminal;
+        this.know_how = know_how;
+        this.trusted = trusted;
+        this.order_level = order_level;
+        this.storekeeper_level = storekeeper_level;
+        this.vehicle = vehicle;
+        this.cashless = cashless;
+        this.exclusive = exclusive;
+    }
+
     public Double getDelivery_kit() {
         return delivery_kit;
     }

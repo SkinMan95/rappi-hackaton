@@ -23,7 +23,15 @@ public class Order {
         this.toolkit = new Toolkit();
     }
 
-
+    public Order(Double id, Double lat, Double lng, Date timestamp, Date created_at, String type, Toolkit toolkit) {
+        this.id = id;
+        this.lat = lat;
+        this.lng = lng;
+        this.timestamp = timestamp;
+        this.created_at = created_at;
+        this.type = type;
+        this.toolkit = toolkit;
+    }
 
     public Double getId() {
         return id;
