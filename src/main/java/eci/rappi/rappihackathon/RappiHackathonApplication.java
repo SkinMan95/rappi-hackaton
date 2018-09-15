@@ -10,16 +10,7 @@ import java.sql.SQLException;
 public class RappiHackathonApplication {
 
 	public static void main(String[] args) {
-		AppConfiguration.CreateConection();
-		try {
-			ResultSet x = AppConfiguration.makeQuery("*","storekeepers");
-			x.next();
-			x.next();
-			System.out.println(x.getInt("id"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		//SpringApplication.run(RappiHackathonApplication.class, args);
+		SpringApplication.run(RappiHackathonApplication.class, args);
 	}
 
 	

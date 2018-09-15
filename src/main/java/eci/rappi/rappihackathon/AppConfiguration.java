@@ -16,8 +16,6 @@ import java.util.Properties;
 @Configuration
 public class AppConfiguration {
 
-    private static Statement conection;
-
     @Bean
     public MongoDbFactory mongoDbFactory() throws Exception {
 
@@ -41,7 +39,7 @@ public class AppConfiguration {
 
     }
 
-    public static void CreateConection() {
+    public static Statement CreateConectionPostgres() {
         try{
             String dataBase="storekeepersdb";
             String user="hackathonpostgres";
@@ -53,27 +51,28 @@ public class AppConfiguration {
             props.setProperty("user",user);
             props.setProperty("password",pass);
             Connection con = DriverManager.getConnection(url, props);
-            conection = con.createStatement();
+            return con.createStatement();
         }catch(Exception e){
-            System.out.println("No se conecto! "+e);
+            System.err.println("No se conecto! "+e);
         }
+        return null;
     }
 
     public static ResultSet makeQuery(String columns, String table, String condition) throws SQLException {
-        CreateConection();
-        ResultSet res = conection.executeQuery("select "+columns+" from "+table+" where "+condition);
-        return res;
+        Statement con = CreateConectionPostgres();
+        return con != null ? con.executeQuery("select " + columns + " from " + table + " where " + condition) : null;
     }
 
     public static ResultSet makeQuery(String columns, String table) throws SQLException {
-        CreateConection();
-        ResultSet res = conection.executeQuery("select "+columns+" from "+table);
-        return res;
+        Statement con = CreateConectionPostgres();
+        return con != null ? con.executeQuery("select " + columns + " from " + table) : null;
     }
 
     public static void update(String table, String set,String where) throws SQLException {
-        CreateConection();
-        conection.executeQuery("Update "+table+" set "+set+" where "+where);
+        Statement con = CreateConectionPostgres();
+        if (con != null) {
+            con.executeQuery("Update "+table+" set "+set+" where "+where);
+        }
     }
 
 }
