@@ -9,4 +9,6 @@ public class RappiHackathonApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RappiHackathonApplication.class, args);
 	}
+
+	
 }
