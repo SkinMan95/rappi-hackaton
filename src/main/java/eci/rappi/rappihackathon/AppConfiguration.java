@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 import java.sql.*;
+import java.util.Properties;
 
 @Configuration
 public class AppConfiguration {
@@ -40,15 +41,18 @@ public class AppConfiguration {
 
     }
 
-    public static void CreateConection(){
-        String dataBase="storekeepersdb";
-        String user="hackathonpostgres";
-        String pass="hackathon2018rappipsql";
-        String host="postgres-hackathon.eastus2.cloudapp.azure.com";
-        int port=5432;
+    public static void CreateConection() {
         try{
-            Class.forName("org.postgresql.Driver");
-            Connection con= DriverManager.getConnection("jdbc:postgressql://"+host+":"+port+"/"+dataBase+"?user="+user+"&password="+pass);
+            String dataBase="storekeepersdb";
+            String user="hackathonpostgres";
+            String pass="hackathon2018rappipsql";
+            String host="postgres-hackathon.eastus2.cloudapp.azure.com";
+            int port=5432;
+            String url = "jdbc:postgresql://"+host+":"+port+"/"+dataBase;
+            Properties props = new Properties();
+            props.setProperty("user",user);
+            props.setProperty("password",pass);
+            Connection con = DriverManager.getConnection(url, props);
             conection = con.createStatement();
         }catch(Exception e){
             System.out.println("No se conecto! "+e);

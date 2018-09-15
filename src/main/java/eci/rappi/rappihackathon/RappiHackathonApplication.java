@@ -14,6 +14,7 @@ public class RappiHackathonApplication {
 		try {
 			ResultSet x = AppConfiguration.makeQuery("*","storekeepers");
 			x.next();
+			x.next();
 			System.out.println(x.getInt("id"));
 		} catch (SQLException e) {
 			e.printStackTrace();
