@@ -1,10 +1,14 @@
 package eci.rappi.rappihackathon.model;
 
+import org.bson.types.ObjectId;
+
 import java.util.Date;
 
 public class Order {
 
-    private Double id; // XXX
+    private ObjectId _id;
+
+    private Double id;
     private Double lat;
     private Double lng;
     private Date timestamp;
@@ -32,6 +36,9 @@ public class Order {
         this.type = type;
         this.toolkit = toolkit;
     }
+
+    public String get_id() { return _id.toHexString(); }
+    public void set_id(ObjectId _id) { this._id = _id; }
 
     public Double getId() {
         return id;
@@ -87,5 +94,18 @@ public class Order {
 
     public void setToolkit(Toolkit toolkit) {
         this.toolkit = toolkit;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", timestamp=" + timestamp +
+                ", created_at=" + created_at +
+                ", type='" + type + '\'' +
+                ", toolkit=" + toolkit +
+                '}';
     }
 }

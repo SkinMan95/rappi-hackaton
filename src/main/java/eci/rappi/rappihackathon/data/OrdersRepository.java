@@ -1,9 +1,14 @@
 package eci.rappi.rappihackathon.data;
 
 import eci.rappi.rappihackathon.model.Order;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.bson.types.ObjectId;
 
-public interface OrdersRepository extends MongoRepository<Order, String> {
+import java.util.List;
 
-    // todo por hacer
+public interface OrdersRepository {
+
+//    @Query("{ 'id' : { $gt: 0 } }")
+//    List<Order> showAll();
+
+    Order findBy_id(ObjectId _id);
 }

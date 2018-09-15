@@ -1,14 +1,14 @@
 package eci.rappi.rappihackathon;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.MongoClientSettings;
+import org.bson.Document;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 import java.sql.*;
 import java.util.Properties;
@@ -16,44 +16,31 @@ import java.util.Properties;
 @Configuration
 public class AppConfiguration {
 
-    @Bean
-    public MongoDbFactory mongoDbFactory() throws Exception {
+    public static void makeConnection() {
+        MongoClient mongoClient = MongoClients.create("mongodb://mongo-hackathon.eastus2.cloudapp.azure.com:27017");
 
-        // Set credentials
-        MongoCredential credential = MongoCredential.createCredential("hackathonmongo", "orders", "hackathon2018rappimongodb".toCharArray());
-        ServerAddress serverAddress = new ServerAddress("mongo-hackathon.eastus2.cloudapp.azure.com", 27017);
+        MongoDatabase database = mongoClient.getDatabase("orders");
 
-        // Mongo Client
-        MongoClient mongoClient = new MongoClient(serverAddress, credential, new MongoClientOptions.Builder().build());
+        MongoCollection<Document> collection = database.getCollection("orders");
 
-
-        return new SimpleMongoDbFactory(mongoClient, "orders");
-    }
-
-    @Bean
-    public MongoTemplate mongoTemplate() throws Exception {
-
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
-
-        return mongoTemplate;
-
+        System.out.println("Prueba: " + collection.countDocuments());
     }
 
     public static Statement CreateConectionPostgres() {
-        try{
-            String dataBase="storekeepersdb";
-            String user="hackathonpostgres";
-            String pass="hackathon2018rappipsql";
-            String host="postgres-hackathon.eastus2.cloudapp.azure.com";
-            int port=5432;
-            String url = "jdbc:postgresql://"+host+":"+port+"/"+dataBase;
+        try {
+            String dataBase = "storekeepersdb";
+            String user = "hackathonpostgres";
+            String pass = "hackathon2018rappipsql";
+            String host = "postgres-hackathon.eastus2.cloudapp.azure.com";
+            int port = 5432;
+            String url = "jdbc:postgresql://" + host + ":" + port + "/" + dataBase;
             Properties props = new Properties();
-            props.setProperty("user",user);
-            props.setProperty("password",pass);
+            props.setProperty("user", user);
+            props.setProperty("password", pass);
             Connection con = DriverManager.getConnection(url, props);
             return con.createStatement();
-        }catch(Exception e){
-            System.err.println("No se conecto! "+e);
+        } catch (Exception e) {
+            System.err.println("No se conecto! " + e);
         }
         return null;
     }
@@ -68,11 +55,12 @@ public class AppConfiguration {
         return con != null ? con.executeQuery("select " + columns + " from " + table) : null;
     }
 
-    public static void update(String table, String set,String where) throws SQLException {
+    public static void update(String table, String set, String where) throws SQLException {
         Statement con = CreateConectionPostgres();
         if (con != null) {
-            con.executeQuery("Update "+table+" set "+set+" where "+where);
+            con.executeQuery("Update " + table + " set " + set + " where " + where);
         }
+
     }
 
 }
