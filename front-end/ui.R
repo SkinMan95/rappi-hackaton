@@ -1,14 +1,18 @@
 library(leaflet)
 
 # Choices for drop-downs
-vars <- c(
-  "Is SuperZIP?" = "superzip",
-  "Centile score" = "centile",
-  "College education" = "college",
+VehicleMenu <- c(
+  "All" = "college",
+  "Bicycle" = "superzip",
+  "Motorcycle" = "centile"
+)
+OrderMenu <- c(
+  "Bicycle" = "superzip",
+  "Motorcycle" = "centile",
+  "*" = "college",
   "Median income" = "income",
   "Population" = "adultpop"
 )
-
 
 navbarPage("Rappi RT Analizer", id="nav",
 
@@ -33,12 +37,12 @@ navbarPage("Rappi RT Analizer", id="nav",
         textInput("input_city","City",">V"),
         #conditionalPanel("input.color == 'superzip' || input.size == 'superzip'",
           # Only prompt for threshold when coloring or sizing by superzip
-          sliderInput("radio_slider", "Radio", 5,min=1,max=10,step=0.5),
+          #sliderInput("radio_slider", "Radio", 5,min=1,max=10,step=0.5),
         #),
-        selectInput("color", "Vehicle", vars),
-        selectInput("size", "Order Type", vars, selected = "adultpop"),
-        plotOutput("histCentile", height = 200),
-        plotOutput("scatterCollegeIncome", height = 250)
+        selectInput("color", "Vehicle", VehicleMenu),
+        selectInput("size", "Order Type", OrderMenu, selected = "adultpop")#,
+        #plotOutput("histCentile", height = 200),
+        #plotOutput("scatterCollegeIncome", height = 250)
       ),
 
       tags$div(id="cite",
