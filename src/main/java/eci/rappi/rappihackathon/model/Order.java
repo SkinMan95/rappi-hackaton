@@ -19,7 +19,7 @@ public class Order {
         this.lng = new Double(0);
         this.timestamp = new Date();
         this.created_at = new Date();
-        this.type = new String();
+        this.type = "";
         this.toolkit = new Toolkit();
     }
 
