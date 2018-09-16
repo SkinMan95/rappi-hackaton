@@ -4,6 +4,13 @@ import java.lang.reflect.Type;
 import java.sql.*;
 
 import com.google.gson.*;
+import com.mongodb.DB;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.primefaces.model.map.Circle;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
@@ -56,11 +63,26 @@ public class Utiles {
             while (resultSet.next()){
                 storeKeepers.add(gson.fromJson(resultSet.getString("json"),StoreKeeper.class));
             }
+            statement.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return storeKeepers;
 
+    }
+
+    public static List<Order> getOrders(){
+        MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
+        MongoDatabase database = mongoClient.getDatabase("orders");
+        MongoCollection<Document> collection = database.getCollection("orders");
+        Gson gson = new Gson();
+        ArrayList<Order> orders= new ArrayList<>();
+        for(Document doc : collection.find()){
+            Order order = gson.fromJson(doc.toJson(),Order.class);
+            orders.add(order);
+        }
+        return orders;
     }
 
 }

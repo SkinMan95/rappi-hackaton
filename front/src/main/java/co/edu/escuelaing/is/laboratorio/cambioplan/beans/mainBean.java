@@ -18,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import co.edu.escuelaing.is.laboratorio.cambioplan.logic.Order;
 import co.edu.escuelaing.is.laboratorio.cambioplan.logic.StoreKeeper;
 import co.edu.escuelaing.is.laboratorio.cambioplan.logic.Utiles;
 import org.primefaces.event.map.GeocodeEvent;
@@ -32,6 +33,7 @@ public class mainBean implements Serializable {
     private int vehicle,interval,zoom;
     private String type,actualCoords;
     private List<StoreKeeper> storeKeepers;
+    private List<Order> orders;
 
     public mainBean() {
         vehicle =0;
@@ -44,6 +46,7 @@ public class mainBean implements Serializable {
     public void init() {
         circleModel = new DefaultMapModel();
         storeKeepers = Utiles.getStoresKeepers();
+//        orders = Utiles.getOrders();
         fillModel();
     }
 
@@ -68,6 +71,17 @@ public class mainBean implements Serializable {
         if (results != null && !results.isEmpty()) {
             LatLng center = results.get(0).getLatLng();
             actualCoords = center.getLat() + "," + center.getLng();
+        }
+    }
+
+    public void onReverseGeocode(ReverseGeocodeEvent event) {
+        List<String> addresses = event.getAddresses();
+        LatLng coord = event.getLatlng();
+
+        if (addresses != null && !addresses.isEmpty()) {
+            actualCoords = coord.getLat() + "," + coord.getLng();
+            circleModel.addOverlay(new Marker(coord, addresses.get(0)));
+            System.out.println(addresses);
         }
     }
 
