@@ -71,10 +71,27 @@ public class Utiles {
         }
 
         return storeKeepers;
-
     }
 
-    public static List<Order> getOrders(){
+    public static List<StoreKeeper> getStoresKeepers(Double LDClat,Double LDClng,Double RUClat,Double RUClng){
+        Statement statement = CreateStatementPostgres();
+        List<StoreKeeper> storeKeepers= new ArrayList<>();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
+        try {
+            String range = LDClat +" < lat and lat < " + RUClat + " and "+RUClng + " > lng  and lng > " + LDClng;
+            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x where " + range);
+            while (resultSet.next()){
+                storeKeepers.add(gson.fromJson(resultSet.getString("json"),StoreKeeper.class));
+            }
+            statement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return storeKeepers;
+    }
+
+    public static List<Order> getOrders(Double LDClat,Double LDClng,Double RUClat,Double RUClng){
         MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
         database = mongoClient.getDatabase("orders");
         collection = database.getCollection("orders");

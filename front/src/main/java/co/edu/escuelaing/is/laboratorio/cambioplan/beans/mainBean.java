@@ -26,6 +26,7 @@ import co.edu.escuelaing.is.laboratorio.cambioplan.logic.Utiles;
 import org.primefaces.event.map.GeocodeEvent;
 import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.event.map.ReverseGeocodeEvent;
+import org.primefaces.event.map.StateChangeEvent;
 import org.primefaces.model.map.*;
 
 @ManagedBean(name = "Main")
@@ -57,6 +58,15 @@ public class mainBean implements Serializable {
 //        orders = Utiles.getOrders();
         fillModel();
         load=true;
+    }
+
+    public void onStateChange(StateChangeEvent event) {
+        LatLngBounds bounds = event.getBounds();
+        zoom = event.getZoomLevel();
+        actualCoords = event.getCenter().getLat() + "," + event.getCenter().getLng();
+        storeKeepers = Utiles.getStoresKeepers(bounds.getSouthWest().getLat()
+        ,bounds.getSouthWest().getLng(),bounds.getNorthEast().getLat(),bounds.getNorthEast().getLng());
+
     }
 
     private void fillModel(){

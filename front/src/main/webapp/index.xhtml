@@ -38,6 +38,7 @@ and open the template in the editor.
                     <p:gmap id="geoGmap" widgetVar="geoMap" styleClass="ui-g-12" style="height: 100%" center="#{Main.actualCoords}" zoom="#{Main.zoom}" type="MAP" model="#{Main.circleModel}">
                         <p:ajax event="geocode" listener="#{Main.onGeocode}" update="@this" />
                         <p:ajax event="reverseGeocode" listener="#{Main.onReverseGeocode}" update="@this" />
+                        <p:ajax event="stateChange" listener="#{Main.onStateChange}" update="@this" />
                     </p:gmap>
                 </div>
             </div>
@@ -45,7 +46,7 @@ and open the template in the editor.
                 <p:panel header="Menu" style="height: 100%;">
                     <h:panelGrid columns="1" style="margin: 0 auto">
                         <p:outputLabel for="@next" value="City"/>
-                        <p:inputText id="address"/>
+                        <p:inputText id="address" style="width: 60%;"/>
                         <p:commandButton value="Update" icon="ui-icon-search" onclick="geocode()" type="button" />
                         <p:outputLabel for="@next" value="Vehicle"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.vehicle}">
@@ -112,8 +113,8 @@ and open the template in the editor.
                             <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Interval(s)"/>
-                        <p:inputNumber id="inter" value="#{Main.interval}"/>
-                        <p:slider minValue="10" maxValue="100" for="inter"/>
+                        <p:outputLabel id="inter" value="#{Main.interval}"/>
+                        <p:slider minValue="10" maxValue="100" for="inter" style="width: 60%;"/>
 
                         <p:commandButton value="Aplicar" update="geoGmap inter" style="margin-top: 10px" actionListener="#{Main.filterByVehicle}"/>
                     </h:panelGrid>
