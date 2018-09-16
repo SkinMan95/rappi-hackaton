@@ -15,13 +15,6 @@ public class RappiHackathonApplicationTests {
 	}
 
 	@Test
-	public void testDePrueba() {
-		System.out.println("Test de prueba");
-
-		Assert.assertTrue(true);
-	}
-
-	@Test
 	public void testConectionPosgres(){
 		Assert.assertNotNull(AppConfiguration.CreateStatementPostgres());
 	}
