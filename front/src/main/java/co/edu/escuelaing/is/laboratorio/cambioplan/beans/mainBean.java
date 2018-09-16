@@ -65,6 +65,8 @@ public class mainBean implements Serializable {
         LatLngBounds bounds = event.getBounds();
         zoom = event.getZoomLevel();
         actualCoords = event.getCenter().getLat() + "," + event.getCenter().getLng();
+        orders = Utiles.getOrders(bounds.getSouthWest().getLat()
+                ,bounds.getSouthWest().getLng(),bounds.getNorthEast().getLat(),bounds.getNorthEast().getLng());
         storeKeepers = Utiles.getStoresKeepers(bounds.getSouthWest().getLat()
         ,bounds.getSouthWest().getLng(),bounds.getNorthEast().getLat(),bounds.getNorthEast().getLng());
         fillModel();

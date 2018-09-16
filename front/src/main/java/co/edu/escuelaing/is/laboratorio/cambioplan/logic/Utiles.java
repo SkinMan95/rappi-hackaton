@@ -63,7 +63,7 @@ public class Utiles {
         List<StoreKeeper> storeKeepers= new ArrayList<>();
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
         try {
-            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x limit 1000");
+            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x limit 500");
             while (resultSet.next()){
                 storeKeepers.add(gson.fromJson(resultSet.getString("json"),StoreKeeper.class));
             }
@@ -81,7 +81,7 @@ public class Utiles {
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
         try {
             String range = LDClat +" < lat and lat < " + RUClat + " and "+RUClng + " > lng  and lng > " + LDClng;
-            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x where " + range + " Limit 1000");
+            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x where " + range + " Limit 500");
             while (resultSet.next()){
                 storeKeepers.add(gson.fromJson(resultSet.getString("json"),StoreKeeper.class));
             }
@@ -99,13 +99,10 @@ public class Utiles {
         collection = database.getCollection("orders");
         Gson gson = new Gson();
         ArrayList<Order> orders= new ArrayList<>();
-
-
-
         for(Document doc : collection.find(and(
                 and(gt("lat", LDClat), lt("lat", RUClat)),
                 and(gt("lng", LDClng), lt("lng", RUClng))
-        ))){
+        )).limit(500)){
             Order order = gson.fromJson(doc.toJson(),Order.class);
             orders.add(order);
         }
