@@ -1,11 +1,13 @@
 package eci.rappi.rappihackathon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eci.rappi.rappihackathon.ObjectIdJsonSerializer;
 import org.bson.types.ObjectId;
-
-import java.util.Date;
 
 public class Order {
 
+    @JsonIgnore
     private ObjectId _id;
 
     private Double id;
@@ -18,6 +20,7 @@ public class Order {
 
 
     public Order() {
+        this._id = new ObjectId();
         this.id = 0.0;
         this.lat = 0.0;
         this.lng = 0.0;
@@ -38,7 +41,7 @@ public class Order {
         this.toolkit = toolkit;
     }
 
-    public String get_id() { return _id.toHexString(); }
+    public ObjectId get_id() { return _id; }
     public void set_id(ObjectId _id) { this._id = _id; }
 
     public Double getId() {
