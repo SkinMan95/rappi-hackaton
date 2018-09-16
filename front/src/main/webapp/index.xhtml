@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+    <title>Rappi Analizer</title>
+    <!--<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyA00lwQQgWZXTKZ_UV4V9o3yT1XRdnEAlY"></script>-->
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyB6o5OyV-vgXK4dj1M0KTqYhpkHKc9D5f4"></script>
+</h:head>
+<h:body>
+    <script type="text/javascript">
+        function geocode() {
+            PF('geoMap').geocode(document.getElementById('address').value);
+        }
+
+        function reverseGeocode() {
+            var lat = document.getElementById('lat').value,
+                lng = document.getElementById('lng').value;
+
+            PF('revGeoMap').reverseGeocode(lat, lng);
+        }
+    </script>
+    <h:form prependId="false">
+        <p:growl id="growl" life="3000" />
+        <div class="ui-g" style="height: 1000px">
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-12" style="height: 100%;">
+                    <p:poll interval="#{Main.interval}" update="geoGmap" listener="#{Main.init}"/>
+                    <p:gmap id="geoGmap" widgetVar="geoMap" styleClass="ui-g-12" style="height: 100%" center="#{Main.actualCoords}" zoom="#{Main.zoom}" type="MAP" model="#{Main.circleModel}">
+                        <p:ajax event="geocode" listener="#{Main.onGeocode}" update="@this" />
+                    </p:gmap>
+                </div>
+            </div>
+            <div class="ui-g-2">
+                <p:panel header="Menu" style="height: 100%;">
+                    <h:panelGrid columns="1" style="margin: 0 auto">
+                        <p:outputLabel for="@next" value="City"/>
+                        <p:inputText id="address"/>
+                        <p:commandButton value="Update" icon="ui-icon-search" onclick="geocode()" type="button" />
+                        <p:outputLabel for="@next" value="Vehicle"/>
+                        <p:selectOneMenu value="#{Main.vehicle}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Order Type"/>
+                        <p:selectOneMenu value="#{Main.type}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Interval(s)"/>
+                        <p:inputNumber id="inter" value="#{Main.interval}"/>
+                        <p:slider minValue="10" maxValue="100" for="inter"/>
+
+                        <p:commandButton value="Aplicar" update="geoGmap inter" style="margin-top: 10px" actionListener="#{Main.filterByVehicle}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </div>
+        </div>
+    </h:form>
+
+</h:body>
+</html>
+
