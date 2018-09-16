@@ -3,6 +3,7 @@ package eci.rappi.rappihackathon.model;
 import java.util.Date;
 
 public class StoreKeeper {
+    int id;
     int storekeeper_id;
     Double lat;
     Double lng;
@@ -10,6 +11,7 @@ public class StoreKeeper {
     Toolkit toolkit;
 
     public StoreKeeper() {
+        this.id = 0;
         this.storekeeper_id = 0;
         this.lat = 0.0;
         this.lng = 0.0;
@@ -17,12 +19,21 @@ public class StoreKeeper {
         this.toolkit = new Toolkit();
     }
 
-    public StoreKeeper(int storekeeper_id, Double lat, Double lng, Date timestamp, Toolkit toolkit) {
+    public StoreKeeper(int id, int storekeeper_id, Double lat, Double lng, Date timestamp, Toolkit toolkit) {
+        this.id = id;
         this.storekeeper_id = storekeeper_id;
         this.lat = lat;
         this.lng = lng;
         this.timestamp = timestamp;
         this.toolkit = toolkit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getStorekeeper_id() {

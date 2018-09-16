@@ -1,9 +1,11 @@
 package eci.rappi.rappihackathon;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.Block;
 import com.mongodb.client.*;
 import eci.rappi.rappihackathon.controller.OrdersController;
 import eci.rappi.rappihackathon.model.Order;
+import eci.rappi.rappihackathon.model.StoreKeeper;
 import eci.rappi.rappihackathon.model.Toolkit;
 import org.bson.Document;
 import org.omg.CORBA.Object;
@@ -18,28 +20,44 @@ import static eci.rappi.rappihackathon.controller.OrdersController.convertOrder;
 
 @Configuration
 public class AppConfiguration {
-
+    private static final double dLat = 0.00085;
+    private static final double dLong= 0.000085;
     private static MongoDatabase database;
     private static MongoCollection<Document> collection;
-
     private static Map<String, String> filtersStr = new HashMap<>();
     private static Map<String, Long> filtersIn = new HashMap<>();
+    private static ObjectMapper jsonObjectMapper;
 
     @Bean
-    public static MongoDatabase mongoDatabase() {
+    public static MongoDatabase mongoDatabase() throws SQLException {
         MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
-
         MongoDatabase database = mongoClient.getDatabase("orders");
-
         MongoCollection<Document> collection = database.getCollection("orders");
-        //filtersStr.put("timestamp","2018-09-05 10:00:00");
-        //filtersIn.put("toolkit.vehicle", (long) 0.0);
-        //filtersStr.put("type","restaurant");
-        //filtersIn.put("id", (long) 8570766.0);
-//        List<Order> filteredOrders = filterBy(collection);
         AppConfiguration.database = database;
         AppConfiguration.collection = collection;
-
+        List<StoreKeeper> str = getStoreKeepersByOrder("{\n" +
+                "  \"_id\" : {\n" +
+                "    \"$oid\" : \"5b9c7e50757f72efad81ccb6\"\n" +
+                "  },\n" +
+                "  \"id\" : 8570766.0,\n" +
+                "  \"lat\" : 4.728696,\n" +
+                "  \"lng\" : -74.032399,\n" +
+                "  \"timestamp\" : \"2018-09-05 10:00:00\",\n" +
+                "  \"created_at\" : \"2018-09-05 04:54:44\",\n" +
+                "  \"type\" : \"restaurant\",\n" +
+                "  \"toolkit\" : {\n" +
+                "    \"delivery_kit\" : 0.0,\n" +
+                "    \"kit_size\" : 0.0,\n" +
+                "    \"terminal\" : 0.0,\n" +
+                "    \"know_how\" : 0.0,\n" +
+                "    \"trusted\" : false,\n" +
+                "    \"order_level\" : 2.0,\n" +
+                "    \"storekeeper_level\" : 1.0,\n" +
+                "    \"vehicle\" : 0.0,\n" +
+                "    \"cashless\" : true,\n" +
+                "    \"exclusive\" : false\n" +
+                "  }\n" +
+                "}");
         return database;
     }
 
@@ -106,6 +124,47 @@ public class AppConfiguration {
         }
         return null;
     }
+    public static List<StoreKeeper> getStoreKeepersByOrder(String orderSt) throws SQLException {
+        Statement statement = CreateStatementPostgres();
+        try{
+
+            List<StoreKeeper> storeKeepers = new ArrayList<>();
+            Order o = null;
+            jsonObjectMapper = new ObjectMapper();
+            o = jsonObjectMapper.readValue(orderSt, Order.class);
+            Toolkit tk = o.getToolkit();
+            Double oLat = o.getLat();
+            Double oLng = o.getLng();
+            Double tlat = oLat+dLat;
+            Double vlng = oLng+dLong;
+            ResultSet rs = statement.executeQuery("select row_to_json(t) from (SELECT * FROM storekeepers " +
+                    "WHERE lat <= (" + (tlat) + ") " +
+                    "and lat>=(" + (vlng) + ") " +
+                    "and lng<=(" + (tlat) + ") " +
+                    "and lng>=(" + (vlng) + ")) t");
+
+            //int cont=0;
+            while(rs.next()){
+                String json = rs.getString(1);
+                StoreKeeper sk = jsonObjectMapper.readValue(json, StoreKeeper.class);
+                storeKeepers.add(sk);
+            }
+            //for(StoreKeeper ss : storeKeepers){
+              //  if(ss.getToolkit().getTrusted().equals(tk.getTrusted()) && ss.getToolkit().getVehicle().equals(0.0) ){
+                //    System.out.println("VEHICLEEEE: "+ tk.getVehicle());
+                 //   cont++;
+                //}
+
+            //}
+            //System.out.println("CONTTTTT: "+cont);
+            statement.close();
+            return storeKeepers;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static ResultSet makeQuery(String columns, String table, String condition) {
         Statement statement = CreateStatementPostgres();
