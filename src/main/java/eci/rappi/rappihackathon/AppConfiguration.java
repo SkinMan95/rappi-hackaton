@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.*;
@@ -13,14 +14,17 @@ import java.util.Properties;
 @Configuration
 public class AppConfiguration {
 
-    public static void makeConnection() {
-        MongoClient mongoClient = MongoClients.create("mongodb://mongo-hackathon.eastus2.cloudapp.azure.com:27017");
+    @Bean
+    public MongoCollection<Document> mongoCollection() {
+        MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
 
         MongoDatabase database = mongoClient.getDatabase("orders");
 
         MongoCollection<Document> collection = database.getCollection("orders");
 
-        System.out.println("Prueba: " + collection.countDocuments());
+        System.out.println("Cantidad de datos: " + collection.countDocuments());
+
+        return collection;
     }
 
     public static Statement CreateStatementPostgres() {
