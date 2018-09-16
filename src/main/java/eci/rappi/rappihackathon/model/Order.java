@@ -11,8 +11,8 @@ public class Order {
     private Double id;
     private Double lat;
     private Double lng;
-    private Date timestamp;
-    private Date created_at;
+    private String timestamp;
+    private String created_at;
     private String type;
     private Toolkit toolkit;
 
@@ -21,13 +21,14 @@ public class Order {
         this.id = new Double(0);
         this.lat = new Double(0);
         this.lng = new Double(0);
-        this.timestamp = new Date();
-        this.created_at = new Date();
+        this.timestamp = "";
+        this.created_at = "";
         this.type = "";
         this.toolkit = new Toolkit();
     }
 
-    public Order(Double id, Double lat, Double lng, Date timestamp, Date created_at, String type, Toolkit toolkit) {
+    public Order(ObjectId _id, Double id, Double lat, Double lng, String timestamp, String created_at, String type, Toolkit toolkit) {
+        this._id = _id;
         this.id = id;
         this.lat = lat;
         this.lng = lng;
@@ -64,19 +65,19 @@ public class Order {
         this.lng = lng;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 

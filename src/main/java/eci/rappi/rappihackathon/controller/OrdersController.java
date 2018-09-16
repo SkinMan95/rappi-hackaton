@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,12 +27,12 @@ public class OrdersController {
         Double id = doc.getDouble("id");
         Double lat = doc.getDouble("lat");
         Double lng = doc.getDouble("lng");
-        Date timestamp = doc.getDate("timestamp");
-        Date created_at = doc.getDate("created_at");
+        String timestamp = doc.getString("timestamp");
+        String created_at = doc.getString("created_at");
         String type = doc.getString("type");
         Toolkit toolkit = convertToolkit(((Document) doc.get("toolkit")));
 
-        Order o = new Order(id, lat, lng, timestamp, created_at, type, toolkit);
+        Order o = new Order(_id, id, lat, lng, timestamp, created_at, type, toolkit);
         return o;
     }
 
@@ -60,11 +61,18 @@ public class OrdersController {
         return collection.countDocuments();
     }
 
-    @GetMapping("/")
+    @GetMapping("/valores")
     public List<Order> getAllOrders() {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
         MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoCollection");
 
-        return null;
+        List<Order> list = new ArrayList<>();
+        for (Document doc:  collection.find()) {
+            list.add(convertFindIterable(doc));
+        }
+
+        System.out.println(list.size());
+
+        return list;
     }
 }
