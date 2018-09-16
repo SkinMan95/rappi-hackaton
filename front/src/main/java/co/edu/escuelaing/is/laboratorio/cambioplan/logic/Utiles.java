@@ -99,7 +99,13 @@ public class Utiles {
         collection = database.getCollection("orders");
         Gson gson = new Gson();
         ArrayList<Order> orders= new ArrayList<>();
-        for(Document doc : collection.find()){
+
+
+
+        for(Document doc : collection.find(and(
+                and(gt("lat", LDClat), lt("lat", RUClat)),
+                and(gt("lng", LDClng), lt("lng", RUClng))
+        ))){
             Order order = gson.fromJson(doc.toJson(),Order.class);
             orders.add(order);
         }
