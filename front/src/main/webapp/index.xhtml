@@ -55,15 +55,12 @@ and open the template in the editor.
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Order Type"/>
                         <p:selectOneMenu value="#{Main.order.type}">
-                            <f:selectItem itemValue="0" itemLabel="Any"/>
-                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
-                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                            <f:selectItems value="#{Main.types}" />
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Delivery kit"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.delivery_kit}">
-                            <f:selectItem itemValue="0" itemLabel="Any"/>
-                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
-                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Kit Size"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.kit_size}">
@@ -75,18 +72,18 @@ and open the template in the editor.
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Terminal"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.terminal}">
-                            <f:selectItem itemValue="0" itemLabel="Yes"/>
-                            <f:selectItem itemValue="1" itemLabel="No"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Know how"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.know_how}">
-                            <f:selectItem itemValue="0" itemLabel="Yes"/>
-                            <f:selectItem itemValue="1" itemLabel="No"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Trusted"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.trusted}">
-                            <f:selectItem itemValue="0" itemLabel="Yes"/>
-                            <f:selectItem itemValue="1" itemLabel="No"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Order level"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.order_level}">
@@ -106,13 +103,13 @@ and open the template in the editor.
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="cashless"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.cashless}">
-                            <f:selectItem itemValue="0" itemLabel="Yes"/>
-                            <f:selectItem itemValue="1" itemLabel="No"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="exclusive"/>
                         <p:selectOneMenu value="#{Main.order.toolkit.exclusive}">
-                            <f:selectItem itemValue="0" itemLabel="Yes"/>
-                            <f:selectItem itemValue="1" itemLabel="No"/>
+                            <f:selectItem itemValue="0" itemLabel="No"/>
+                            <f:selectItem itemValue="1" itemLabel="Yes"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Interval(s)"/>
                         <p:inputNumber id="inter" value="#{Main.interval}"/>

@@ -21,6 +21,8 @@ import java.util.*;
 
 
 public class Utiles {
+    private static MongoCollection<Document> collection;
+    private static MongoDatabase database;
 
     public static Statement CreateStatementPostgres() {
         try {
@@ -74,8 +76,8 @@ public class Utiles {
 
     public static List<Order> getOrders(){
         MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
-        MongoDatabase database = mongoClient.getDatabase("orders");
-        MongoCollection<Document> collection = database.getCollection("orders");
+        database = mongoClient.getDatabase("orders");
+        collection = database.getCollection("orders");
         Gson gson = new Gson();
         ArrayList<Order> orders= new ArrayList<>();
         for(Document doc : collection.find()){
@@ -84,6 +86,13 @@ public class Utiles {
         }
         mongoClient.close();
         return orders;
+    }
+
+    public static List<String> getTypes(){
+        MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
+        database = mongoClient.getDatabase("orders");
+        Document d = database.runCommand(new Document("distinct", "orders").append("key", "type"));
+        return (List<String>) d.get("values");
     }
 
 }

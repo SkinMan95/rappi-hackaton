@@ -11,7 +11,9 @@ package co.edu.escuelaing.is.laboratorio.cambioplan.beans;
  */
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -31,24 +33,28 @@ import org.primefaces.model.map.*;
 public class mainBean implements Serializable {
     private MapModel circleModel;
     private int interval,zoom;
-    private String type,actualCoords;
+    private String actualCoords;
     private List<StoreKeeper> storeKeepers;
     private List<Order> orders;
     private boolean load;
     private Order order;
-
+    private Map<String,String> types;
     public mainBean() {
         interval=60;
         actualCoords = "4.6435568,-74.0625309";
         zoom=13;
         order = new Order();
+        types = new HashMap<>();
     }
 
     @PostConstruct
     public void init() {
         circleModel = new DefaultMapModel();
         storeKeepers = Utiles.getStoresKeepers();
-        orders = Utiles.getOrders();
+        for (String type : Utiles.getTypes()){
+            types.put(type,type);
+        }
+//        orders = Utiles.getOrders();
         fillModel();
         load=true;
     }
@@ -98,14 +104,6 @@ public class mainBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Circle Selected", null));
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getInterval() {
         return interval;
     }
@@ -144,5 +142,13 @@ public class mainBean implements Serializable {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Map<String, String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Map<String, String> types) {
+        this.types = types;
     }
 }

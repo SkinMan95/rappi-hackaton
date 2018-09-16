@@ -25,7 +25,6 @@ import static com.mongodb.client.model.Filters.*;
 public class OrdersController {
     private static MongoCollection<Document> collection;
     private static MongoDatabase database;
-
     private static ObjectMapper jsonObjectMapper;
 
     public OrdersController() {
