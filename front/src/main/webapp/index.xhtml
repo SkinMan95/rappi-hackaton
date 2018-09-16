@@ -34,7 +34,7 @@ and open the template in the editor.
         <div class="ui-g" style="height: 1000px">
             <div class="ui-g-10 ui-g-nopad">
                 <div class="ui-g-12" style="height: 100%;">
-                    <p:poll interval="#{Main.interval}" update="geoGmap" listener="#{Main.init}"/>
+                    <p:poll interval="#{Main.interval}" update="geoGmap" listener="#{Main.init}" rendered="#{Main.load}"/>
                     <p:gmap id="geoGmap" widgetVar="geoMap" styleClass="ui-g-12" style="height: 100%" center="#{Main.actualCoords}" zoom="#{Main.zoom}" type="MAP" model="#{Main.circleModel}">
                         <p:ajax event="geocode" listener="#{Main.onGeocode}" update="@this" />
                         <p:ajax event="reverseGeocode" listener="#{Main.onReverseGeocode}" update="@this" />

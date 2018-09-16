@@ -82,6 +82,7 @@ public class Utiles {
             Order order = gson.fromJson(doc.toJson(),Order.class);
             orders.add(order);
         }
+        mongoClient.close();
         return orders;
     }
 

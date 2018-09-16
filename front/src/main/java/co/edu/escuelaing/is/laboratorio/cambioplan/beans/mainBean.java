@@ -34,6 +34,7 @@ public class mainBean implements Serializable {
     private String type,actualCoords;
     private List<StoreKeeper> storeKeepers;
     private List<Order> orders;
+    private boolean load;
 
     public mainBean() {
         vehicle =0;
@@ -46,8 +47,9 @@ public class mainBean implements Serializable {
     public void init() {
         circleModel = new DefaultMapModel();
         storeKeepers = Utiles.getStoresKeepers();
-//        orders = Utiles.getOrders();
+        orders = Utiles.getOrders();
         fillModel();
+        load=true;
     }
 
     private void fillModel(){
@@ -133,5 +135,13 @@ public class mainBean implements Serializable {
 
     public void setZoom(int zoom) {
         this.zoom = zoom;
+    }
+
+    public boolean isLoad() {
+        return load;
+    }
+
+    public void setLoad(boolean load) {
+        this.load = load;
     }
 }
