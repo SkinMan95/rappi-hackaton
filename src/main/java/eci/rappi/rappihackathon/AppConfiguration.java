@@ -1,31 +1,58 @@
 package eci.rappi.rappihackathon;
 
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.Block;
+import com.mongodb.client.*;
+import eci.rappi.rappihackathon.controller.OrdersController;
+import eci.rappi.rappihackathon.model.Order;
+import eci.rappi.rappihackathon.model.Toolkit;
 import org.bson.Document;
+import org.omg.CORBA.Object;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import com.mongodb.DBCursor;
 import java.sql.*;
-import java.util.Properties;
+import java.util.*;
+
+import static eci.rappi.rappihackathon.controller.OrdersController.convertToolkit;
 
 @Configuration
 public class AppConfiguration {
-
+    private Map<String, String> filtersStr  = new HashMap<String, String>();
+    private Map<String, Long> filtersIn  = new HashMap<String, Long>();
+    private FindIterable<Document> cursor;
     @Bean
     public MongoCollection<Document> mongoCollection() {
         MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
 
         MongoDatabase database = mongoClient.getDatabase("orders");
 
-        MongoCollection<Document> collection = database.getCollection("orders");
-
-        System.out.println("Cantidad de datos: " + collection.countDocuments());
-
+        MongoCollection<Document>  collection = database.getCollection("orders");
+        //filtersStr.put("timestamp","2018-09-05 10:00:00");
+        //filtersIn.put("toolkit.vehicle", (long) 0.0);
+        //filtersStr.put("type","restaurant");
+        //filtersIn.put("id", (long) 8570766.0);
+        List<Order> filteredOrders = filterBy(collection );
         return collection;
     }
+    public Document setFilters(){
+        Document doc = new Document();
+        for(Map.Entry<String, String> entry : filtersStr.entrySet()) {
+            doc.append(entry.getKey(),entry.getValue());
+        }
+        for(Map.Entry<String, Long> entry : filtersIn.entrySet()) {
+            doc.append(entry.getKey(),entry.getValue());
+        }
+        return doc;
+    }
+    public List<Order> filterBy(MongoCollection<Document> collection){
+        List<Order> orders = new ArrayList<Order>();
+        cursor = collection.find(setFilters());
+            for (Document document : cursor) {
+                orders.add(OrdersController.convertFindIterable(document));
+            }
+        return orders;
+    }
+
 
     public static Statement CreateStatementPostgres() {
         try {

@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrdersController {
 
-    public Order convertFindIterable(Document doc) {
+    public static Order convertFindIterable(Document doc) {
         ObjectId _id = doc.getObjectId("_id");
         Double id = doc.getDouble("id");
         Double lat = doc.getDouble("lat");
@@ -36,7 +36,7 @@ public class OrdersController {
         return o;
     }
 
-    public Toolkit convertToolkit(Document tool) {
+    public static  Toolkit convertToolkit(Document tool) {
         Double delivery_kit = tool.getDouble("delivery_kit");
         Double kit_size = tool.getDouble("kit_size");
         Double terminal = tool.getDouble("terminal");
