@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mongodb.client.model.Filters.exists;
-import static com.mongodb.client.model.Filters.or;
-import static com.mongodb.client.model.Filters.where;
+import static com.mongodb.client.model.Filters.*;
 
 
 @RestController
@@ -76,7 +74,6 @@ public class OrdersController {
 
     @GetMapping("/all")
     public List<Order> getAllOrders() {
-
         List<Order> list = new ArrayList<>();
         for (Document doc:  collection.find()) {
             list.add(convertOrder(doc));
@@ -91,7 +88,7 @@ public class OrdersController {
     public List<Order> getOrdersContainingTimestamp() {
         List<Order> list = new ArrayList<>();
 
-        for (Document doc: collection.find(or(exists("timestamp", false), where("this.timestamp.length!=19")))) {
+        for (Document doc: collection.find(and(exists("timestamp", true), where("this.timestamp.length==19")))) {
             list.add(convertOrder(doc));
         }
 
