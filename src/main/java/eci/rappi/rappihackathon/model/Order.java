@@ -18,9 +18,9 @@ public class Order {
 
 
     public Order() {
-        this.id = new Double(0);
-        this.lat = new Double(0);
-        this.lng = new Double(0);
+        this.id = 0.0;
+        this.lat = 0.0;
+        this.lng = 0.0;
         this.timestamp = "";
         this.created_at = "";
         this.type = "";

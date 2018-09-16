@@ -14,15 +14,28 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.exists;
+import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.where;
 
 
 @RestController
 @RequestMapping("/order")
 public class OrdersController {
 
-    public Order convertFindIterable(Document doc) {
+    private static MongoCollection<Document> collection;
+
+    public OrdersController() {
+        System.out.println("Creando objeto de OrdersController");
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
+        MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoCollection");
+
+        OrdersController.collection = collection;
+    }
+
+    public Order convertOrder(Document doc) {
         ObjectId _id = doc.getObjectId("_id");
         Double id = doc.getDouble("id");
         Double lat = doc.getDouble("lat");
@@ -61,17 +74,26 @@ public class OrdersController {
         return collection.countDocuments();
     }
 
-    @GetMapping("/valores")
+    @GetMapping("/all")
     public List<Order> getAllOrders() {
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
-        MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoCollection");
 
         List<Order> list = new ArrayList<>();
         for (Document doc:  collection.find()) {
-            list.add(convertFindIterable(doc));
+            list.add(convertOrder(doc));
         }
 
         System.out.println(list.size());
+
+        return list;
+    }
+
+    @GetMapping("timestamp")
+    public List<Order> getOrdersContainingTimestamp() {
+        List<Order> list = new ArrayList<>();
+
+        for (Document doc: collection.find(or(exists("timestamp", false), where("this.timestamp.length!=19")))) {
+            list.add(convertOrder(doc));
+        }
 
         return list;
     }
