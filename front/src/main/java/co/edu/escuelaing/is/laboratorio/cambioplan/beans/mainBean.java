@@ -30,17 +30,18 @@ import org.primefaces.model.map.*;
 @SessionScoped
 public class mainBean implements Serializable {
     private MapModel circleModel;
-    private int vehicle,interval,zoom;
+    private int interval,zoom;
     private String type,actualCoords;
     private List<StoreKeeper> storeKeepers;
     private List<Order> orders;
     private boolean load;
+    private Order order;
 
     public mainBean() {
-        vehicle =0;
         interval=60;
         actualCoords = "4.6435568,-74.0625309";
         zoom=13;
+        order = new Order();
     }
 
     @PostConstruct
@@ -53,7 +54,7 @@ public class mainBean implements Serializable {
     }
 
     private void fillModel(){
-        for(StoreKeeper storeKeeper: storeKeepers)if(vehicle==0 || storeKeeper.getToolkit().getVehicle()==vehicle){
+        for(StoreKeeper storeKeeper: storeKeepers)if(order.getToolkit().getVehicle()==0 || storeKeeper.getToolkit().getVehicle()==order.getToolkit().getVehicle()){
             LatLng latlng = new LatLng(storeKeeper.getLat(),storeKeeper.getLng());
             Circle circle = new Circle(latlng,500 * storeKeeper.getToolkit().getVehicle()); //500 <-> 6 cuadras
             circle.setFillColor("#ff7175");
@@ -97,14 +98,6 @@ public class mainBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Circle Selected", null));
     }
 
-    public int getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(int vehicle) {
-        this.vehicle = vehicle;
-    }
-
     public String getType() {
         return type;
     }
@@ -143,5 +136,13 @@ public class mainBean implements Serializable {
 
     public void setLoad(boolean load) {
         this.load = load;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

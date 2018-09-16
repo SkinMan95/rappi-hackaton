@@ -48,13 +48,67 @@ and open the template in the editor.
                         <p:inputText id="address"/>
                         <p:commandButton value="Update" icon="ui-icon-search" onclick="geocode()" type="button" />
                         <p:outputLabel for="@next" value="Vehicle"/>
-                        <p:selectOneMenu value="#{Main.vehicle}">
+                        <p:selectOneMenu value="#{Main.order.toolkit.vehicle}">
                             <f:selectItem itemValue="0" itemLabel="Any"/>
                             <f:selectItem itemValue="1" itemLabel="Bicycle"/>
                             <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
                         </p:selectOneMenu>
                         <p:outputLabel for="@next" value="Order Type"/>
-                        <p:selectOneMenu value="#{Main.type}">
+                        <p:selectOneMenu value="#{Main.order.type}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Delivery kit"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.delivery_kit}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Kit Size"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.kit_size}">
+                            <f:selectItem itemValue="0" itemLabel="0"/>
+                            <f:selectItem itemValue="1" itemLabel="1"/>
+                            <f:selectItem itemValue="2" itemLabel="2"/>
+                            <f:selectItem itemValue="3" itemLabel="3"/>
+                            <f:selectItem itemValue="4" itemLabel="4"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Terminal"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.terminal}">
+                            <f:selectItem itemValue="0" itemLabel="Yes"/>
+                            <f:selectItem itemValue="1" itemLabel="No"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Know how"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.know_how}">
+                            <f:selectItem itemValue="0" itemLabel="Yes"/>
+                            <f:selectItem itemValue="1" itemLabel="No"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Trusted"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.trusted}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="Order level"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.order_level}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="storeKeeper Level"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.storekeeper_level}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="cashless"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.cashless}">
+                            <f:selectItem itemValue="0" itemLabel="Any"/>
+                            <f:selectItem itemValue="1" itemLabel="Bicycle"/>
+                            <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="@next" value="exclusive"/>
+                        <p:selectOneMenu value="#{Main.order.toolkit.exclusive}">
                             <f:selectItem itemValue="0" itemLabel="Any"/>
                             <f:selectItem itemValue="1" itemLabel="Bicycle"/>
                             <f:selectItem itemValue="2" itemLabel="Motorcycle"/>
