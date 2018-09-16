@@ -19,6 +19,8 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.mongodb.client.model.Filters.*;
+
 
 public class Utiles {
     private static MongoCollection<Document> collection;
