@@ -21,7 +21,7 @@ import static com.mongodb.client.model.Filters.*;
 
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrdersController {
     private static MongoCollection<Document> collection;
     private static MongoDatabase database;
@@ -54,7 +54,7 @@ public class OrdersController {
         return o != null ? o : new Order();
     }
 
-    @RequestMapping(value = "/quantity", method = RequestMethod.GET)
+    @GetMapping("/quantity")
     public Long getAmountOfOrders() {
         System.out.println("Obteniendo todas las ordenes");
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
@@ -75,7 +75,7 @@ public class OrdersController {
         return list;
     }
 
-    @GetMapping("timestamp")
+    @GetMapping("/timestamp")
     public List<Order> getOrdersContainingTimestamp() {
         List<Order> list = new ArrayList<>();
 
@@ -87,11 +87,18 @@ public class OrdersController {
     }
 
     @GetMapping("/distinct")
-    public List<String> getDistinctField(@RequestParam(value = "field", required = true, defaultValue = "type") String field) throws IOException {
+    public List<?> getDistinctField(@RequestParam(value = "field", required = true, defaultValue = "type") String field) throws Exception {
+        System.out.println("Getting distinct field values with:" + field);
         Document d = database.runCommand(new Document("distinct", "orders").append("key", field));
-//        System.out.println(d.toJson());
+        return (ArrayList<?>) d.get("values");
+    }
 
-        return (ArrayList<String>) d.get("values");
+    @GetMapping("/distinct_toolkit")
+    public List<?> getDistinctToolkitAttribute(@RequestParam(value="field", required = true) String field) throws Exception {
+        System.out.println("Getting distinct toolkit field values with:" + field);
+        Document d = database.runCommand(new Document("distinct", "orders").append("key", "toolkit." + field));
+        System.out.println(d.toString());
+        return (ArrayList<?>) d.get("values");
     }
 
     @GetMapping("/filter")
