@@ -1,21 +1,19 @@
 package eci.rappi.rappihackathon.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import eci.rappi.rappihackathon.AppConfiguration;
 import eci.rappi.rappihackathon.model.Order;
-import eci.rappi.rappihackathon.model.Toolkit;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.*;
@@ -25,52 +23,29 @@ import static com.mongodb.client.model.Filters.*;
 @RequestMapping("/order")
 public class OrdersController {
     private static MongoCollection<Document> collection;
-    public static Order convertFindIterable(Document doc) {
-        ObjectId _id = doc.getObjectId("_id");
-        Double id = doc.getDouble("id");
-        Double lat = doc.getDouble("lat");
-        Double lng = doc.getDouble("lng");
-        String timestamp = doc.getString("timestamp");
-        String created_at = doc.getString("created_at");
-        String type = doc.getString("type");
-        Toolkit toolkit = convertToolkit(((Document) doc.get("toolkit")));
+    private static MongoDatabase database;
 
-        Order o = new Order(_id, id, lat, lng, timestamp, created_at, type, toolkit);
-        return o;
-    }
-
-    public static  Toolkit convertToolkit(Document tool) {
-        Double delivery_kit = tool.getDouble("delivery_kit");
-        Double kit_size = tool.getDouble("kit_size");
-        Double terminal = tool.getDouble("terminal");
-        Double know_how = tool.getDouble("know_how");
-        Boolean trusted = tool.getBoolean("trusted");
-        Double order_level = tool.getDouble("order_level");
-        Double storekeeper_level = tool.getDouble("storekeeper_level");
-        Double vehicle = tool.getDouble("vehicle");
-        Boolean cashless = tool.getBoolean("cashless");
-        Boolean exclusive = tool.getBoolean("exclusive");
-
-        Toolkit res = new Toolkit(delivery_kit, kit_size, terminal, know_how, trusted, order_level, storekeeper_level, vehicle, cashless, exclusive);
-        return res;
-    }
-
-
+    private static ObjectMapper jsonObjectMapper;
 
     public OrdersController() {
         System.out.println("Creando objeto de OrdersController");
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
-        MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoCollection");
+        MongoDatabase database = (MongoDatabase) applicationContext.getBean("mongoDatabase");
+        MongoCollection<Document> collection = database.getCollection("orders");
 
         OrdersController.collection = collection;
+        OrdersController.database = database;
+
+        // ------
+
+        jsonObjectMapper = new ObjectMapper();
     }
 
-    public Order convertOrder(Document doc) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static Order convertOrder(Document doc) {
         String json = doc.toJson();
         Order o = null;
         try {
-            o = objectMapper.readValue(json, Order.class);
+            o = jsonObjectMapper.readValue(json, Order.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,7 +57,7 @@ public class OrdersController {
     public Long getAmountOfOrders() {
         System.out.println("Obteniendo todas las ordenes");
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
-        MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoCollection");
+        MongoCollection<Document> collection = (MongoCollection<Document>) applicationContext.getBean("mongoDatabase");
 
         return collection.countDocuments();
     }
@@ -90,7 +65,7 @@ public class OrdersController {
     @GetMapping("/all")
     public List<Order> getAllOrders() {
         List<Order> list = new ArrayList<>();
-        for (Document doc:  collection.find()) {
+        for (Document doc : collection.find()) {
             list.add(convertOrder(doc));
         }
 
@@ -103,10 +78,18 @@ public class OrdersController {
     public List<Order> getOrdersContainingTimestamp() {
         List<Order> list = new ArrayList<>();
 
-        for (Document doc: collection.find(and(exists("timestamp", true), where("this.timestamp.length==19")))) {
+        for (Document doc : collection.find(and(exists("timestamp", true), where("this.timestamp.length==19")))) {
             list.add(convertOrder(doc));
         }
 
         return list;
+    }
+
+    @GetMapping("/distinct")
+    public List<String> getDistinctField(@RequestParam(value = "field", required = true, defaultValue = "type") String field) throws IOException {
+        Document d = database.runCommand(new Document("distinct", "orders").append("key", field));
+//        System.out.println(d.toJson());
+
+        return (ArrayList<String>) d.get("values");
     }
 }
