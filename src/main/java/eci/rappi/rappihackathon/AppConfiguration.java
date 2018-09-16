@@ -18,12 +18,15 @@ import static eci.rappi.rappihackathon.controller.OrdersController.convertOrder;
 
 @Configuration
 public class AppConfiguration {
-    private Map<String, String> filtersStr = new HashMap<String, String>();
-    private Map<String, Long> filtersIn = new HashMap<String, Long>();
-    private FindIterable<Document> cursor;
+
+    private static MongoDatabase database;
+    private static MongoCollection<Document> collection;
+
+    private static Map<String, String> filtersStr = new HashMap<>();
+    private static Map<String, Long> filtersIn = new HashMap<>();
 
     @Bean
-    public MongoDatabase mongoDatabase() {
+    public static MongoDatabase mongoDatabase() {
         MongoClient mongoClient = MongoClients.create("mongodb://hackathonmongo:hackathon2018rappimongodb@mongo-hackathon.eastus2.cloudapp.azure.com:27017/orders?authSource=orders&authMechanism=SCRAM-SHA-1");
 
         MongoDatabase database = mongoClient.getDatabase("orders");
@@ -34,10 +37,13 @@ public class AppConfiguration {
         //filtersStr.put("type","restaurant");
         //filtersIn.put("id", (long) 8570766.0);
 //        List<Order> filteredOrders = filterBy(collection);
+        AppConfiguration.database = database;
+        AppConfiguration.collection = collection;
+
         return database;
     }
 
-    public Document setFilters() {
+    public static Document setFilters() {
         Document doc = new Document();
         for (Map.Entry<String, String> entry : filtersStr.entrySet()) {
             doc.append(entry.getKey(), entry.getValue());
@@ -48,9 +54,33 @@ public class AppConfiguration {
         return doc;
     }
 
-    public List<Order> filterBy(MongoCollection<Document> collection) {
+    public static List<Order> getFilteredOrders(Map<String, String> filterNames) {
+        filtersStr.clear();
+        filtersIn.clear();
+
+        for (Map.Entry<String, String> entry : filterNames.entrySet()) {
+            switch (entry.getKey()) {
+                case "timestamp":
+                case "created_at":
+                case "type":
+                    filtersStr.put(entry.getKey(), entry.getValue());
+                    break;
+                case "toolkit.trusted":
+                case "toolkit.cashless":
+                case "toolkit.exclusive":
+                    filtersIn.put(entry.getKey(), Long.parseLong(entry.getValue()));
+                    break;
+                default:
+                    filtersIn.put(entry.getKey(), Long.parseLong(entry.getValue()));
+            }
+        }
+
+        return filterBy(AppConfiguration.collection);
+    }
+
+    public static List<Order> filterBy(MongoCollection<Document> collection) {
         List<Order> orders = new ArrayList<>();
-        cursor = collection.find(setFilters());
+        FindIterable<Document> cursor = collection.find(setFilters());
         for (Document document : cursor) {
             orders.add(OrdersController.convertOrder(document));
         }

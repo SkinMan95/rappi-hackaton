@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -91,5 +92,10 @@ public class OrdersController {
 //        System.out.println(d.toJson());
 
         return (ArrayList<String>) d.get("values");
+    }
+
+    @GetMapping("/filter")
+    public List<Order> getOrderedFilters(@RequestParam Map<String, String> params) {
+        return AppConfiguration.getFilteredOrders(params);
     }
 }
