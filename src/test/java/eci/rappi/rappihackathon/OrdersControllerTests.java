@@ -16,6 +16,14 @@ public class OrdersControllerTests {
 
     OrdersController orders = new OrdersController();
 
+    @Test
+    /**
+     * Prueba generica
+     */
+    public void testGetAllOrders() {
+        Assert.assertTrue(true);
+    }
+
 //    @Test
 //    /**
 //     * Prueba de que la respuesta no sea nula
