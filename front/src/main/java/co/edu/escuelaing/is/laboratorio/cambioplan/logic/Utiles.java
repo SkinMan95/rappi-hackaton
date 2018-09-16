@@ -81,7 +81,7 @@ public class Utiles {
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
         try {
             String range = LDClat +" < lat and lat < " + RUClat + " and "+RUClng + " > lng  and lng > " + LDClng;
-            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x where " + range);
+            ResultSet resultSet = statement.executeQuery("select row_to_json(x) as json from (select * from storekeepers) as x where " + range + " Limit 1000");
             while (resultSet.next()){
                 storeKeepers.add(gson.fromJson(resultSet.getString("json"),StoreKeeper.class));
             }

@@ -61,12 +61,13 @@ public class mainBean implements Serializable {
     }
 
     public void onStateChange(StateChangeEvent event) {
+        circleModel.getCircles().clear();
         LatLngBounds bounds = event.getBounds();
         zoom = event.getZoomLevel();
         actualCoords = event.getCenter().getLat() + "," + event.getCenter().getLng();
         storeKeepers = Utiles.getStoresKeepers(bounds.getSouthWest().getLat()
         ,bounds.getSouthWest().getLng(),bounds.getNorthEast().getLat(),bounds.getNorthEast().getLng());
-
+        fillModel();
     }
 
     private void fillModel(){
